@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
 const { Schema, model } = mongoose;
 
@@ -19,5 +20,7 @@ UserSchema.virtual('userId').get(function () {
 
 UserSchema.set('toObject', { virtuals: true });
 UserSchema.set('toJSON', { virtuals: true });
+
+UserSchema.plugin(uniqueValidator);
 
 export default model('User', UserSchema);
