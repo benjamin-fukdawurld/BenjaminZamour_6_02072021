@@ -8,4 +8,8 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
+  rules: {
+    'class-methods-use-this': 'off',
+    'import/extensions': 'off',
+  },
 };
