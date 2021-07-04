@@ -8,7 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(auth);
+app.use('/api/auth', auth);
 app.use(sauces);
 
 export default app;
