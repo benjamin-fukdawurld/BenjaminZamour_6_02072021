@@ -1,6 +1,14 @@
+import Sauce from '../models/Sauce.js';
+
 class Controller {
   getSauces(req, res) {
-    res.status(500).send({});
+    Sauce.find()
+      .then((sauces) => {
+        res.status(200).send(sauces);
+      })
+      .catch((error) => {
+        res.status(400).send(error);
+      });
   }
 
   getSauce(req, res) {
