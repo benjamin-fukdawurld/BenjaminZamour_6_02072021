@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import bcrypt from 'bcrypt';
 
 class Controller {
   #checkMissingMember;
@@ -19,18 +20,20 @@ class Controller {
       return;
     }
 
-    delete req.body._id;
-    const user = new User(req.body);
+    bcrypt.hash(req.body.password, 10).then(hash => {
+      const user = new User({ email: req.body.email, password: hash});
 
-    user
-      .save()
-      .then((savedUser) => {
-        console.log(savedUser.toJSON());
-        res.status(201).send({ userId: savedUser._id });
+      user
+        .save()
+        .then((savedUser) => {
+          res.status(201).send({ userId: savedUser._id });
+        })
+        .catch((error) => {
+          res.status(400).send(error);
+        });
+      }).catch(error => {
+        res.status(500).send(error);
       })
-      .catch((error) => {
-        res.status(400).send(error);
-      });
   }
 
   login(req, res) {
@@ -41,14 +44,23 @@ class Controller {
     const { email, password } = req.body;
     User.findOne({ email })
       .then((user) => {
-        if (user.password !== password) {
-          res.status(400).send({ message: 'Connection data invalid' });
+        if(!user) {
+          res.status(401).send({ message: 'Connection data invalid' });
+          return;
         }
 
-        res.status(200).send({ userId: user.userId, token: 'some crypted token' });
+        bcrypt.compare(password, user.password).then(result => {
+          if(result){
+            res.status(200).send({ userId: user.userId, token: 'some crypted token' });
+          } else {
+            res.status(401).send({ message: 'Connection data invalid' });
+          }
+        }).catch(error => {
+          res.status(500).send(error);
+        });
       })
       .catch((error) => {
-        res.status(400).send(error);
+        res.status(500).send(error);
       });
   }
 
