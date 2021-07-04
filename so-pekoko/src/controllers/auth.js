@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 class Controller {
   #checkMissingMember;
@@ -51,7 +52,14 @@ class Controller {
 
         bcrypt.compare(password, user.password).then(result => {
           if(result){
-            res.status(200).send({ userId: user.userId, token: 'some crypted token' });
+            res.status(200).send({
+              userId: user.userId,
+              token: jwt.sign(
+                { userId: user.userId },
+                process.env.TOKEN_KEY,
+                { expiresIn: process.env.TOKEN_DURATION }
+              )
+            });
           } else {
             res.status(401).send({ message: 'Connection data invalid' });
           }
