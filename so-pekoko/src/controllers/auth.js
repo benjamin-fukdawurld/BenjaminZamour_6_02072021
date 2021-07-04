@@ -29,7 +29,7 @@ class Controller {
         res.status(201).send({ userId: savedUser._id });
       })
       .catch((error) => {
-        res.status(400).send({ error });
+        res.status(400).send(error);
       });
   }
 
@@ -38,24 +38,46 @@ class Controller {
       return;
     }
 
-    res.status(500).send({});
+    const { email, password } = req.body;
+    User.findOne({ email })
+      .then((user) => {
+        if (user.password !== password) {
+          res.status(400).send({ message: 'Connection data invalid' });
+        }
+
+        res.status(200).send({ userId: user.userId, token: 'some crypted token' });
+      })
+      .catch((error) => {
+        res.status(400).send(error);
+      });
   }
 
   deleteUser(req, res) {
-    if (!req.body.id) {
+    if (!req.body.userId) {
       res.status(400).send({ message: 'Missing information' });
     }
 
-    User.remove({ _id: req.body.id })
-      .then((count) => {
-        if (count === 0) {
+    User.deleteOne({ _id: req.body.userId })
+      .then((result) => {
+        if (result.deletedCount === 0) {
           res.status(404).send({ message: `User '${req.body.id}' does not exist` });
+          return;
         }
 
-        req.status(200).send({ message: 'User removed' });
+        res.status(200).send({ message: 'User removed' });
       })
       .catch((error) => {
-        res.status(400).send({ error });
+        res.status(400).send(error);
+      });
+  }
+
+  getUsers(req, res) {
+    User.find()
+      .then((users) => {
+        res.status(200).send({ users });
+      })
+      .catch((error) => {
+        res.status(400).send(error);
       });
   }
 }
