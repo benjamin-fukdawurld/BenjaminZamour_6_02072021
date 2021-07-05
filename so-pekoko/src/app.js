@@ -9,6 +9,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', auth);
-app.use(sauces);
+app.use('/api/sauces', sauces);
 
 export default app;

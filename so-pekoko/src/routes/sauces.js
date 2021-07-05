@@ -1,18 +1,20 @@
 import express from 'express';
 import controller from '../controllers/sauces.js';
 
+import auth from '../middleware/auth.js'
+
 const router = express.Router();
 
-router.get('/api/sauces', controller.getSauces);
+router.get('/', auth, controller.getSauces);
 
-router.get('/api/sauces/:id', controller.getSauce);
+router.get('/:id', auth, controller.getSauce);
 
-router.post('/api/sauces', controller.addSauce);
+router.post('/', auth, controller.addSauce);
 
-router.put('/api/sauces/:id', controller.updateSauce);
+router.put('/:id', auth, controller.updateSauce);
 
-router.delete('/api/sauces/:id', controller.deleteSauce);
+router.delete('/:id', auth, controller.deleteSauce);
 
-router.post('/api/sauces/:id/like', controller.likeSauce);
+router.post('/:id/like', auth, controller.likeSauce);
 
 export default router;
