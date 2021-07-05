@@ -37,7 +37,15 @@ class Controller {
   }
 
   updateSauce(req, res) {
-    res.status(500).send({});
+    if(!req.params.id) {
+      res.status(400).send({message: 'Missing information'});
+    }
+
+    Sauce.findOne({_id: req.params.id}).then(result => {
+
+    }).catch(error => {
+      res.status(400).send(error);
+    })
   }
 
   deleteSauce(req, res) {
