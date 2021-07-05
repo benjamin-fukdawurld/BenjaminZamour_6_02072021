@@ -23,7 +23,17 @@ class Controller {
   }
 
   addSauce(req, res) {
-    res.status(500).send({});
+    let { image, sauce } = req.body;
+    sauce = new Sauce(sauce);
+
+    sauce
+      .save()
+      .then(() => {
+        res.status(201).send({ message: 'Sauce added' });
+      })
+      .catch((error) => {
+        res.status(400).send(error);
+      });
   }
 
   updateSauce(req, res) {
