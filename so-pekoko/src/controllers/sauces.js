@@ -12,7 +12,14 @@ class Controller {
   }
 
   getSauce(req, res) {
-    res.status(500).send({});
+    const { id } = req.params;
+    Sauce.findOne({ _id: id })
+      .then((sauce) => {
+        res.status(200).send(sauce);
+      })
+      .catch((error) => {
+        res.status(400).send(error);
+      });
   }
 
   addSauce(req, res) {
