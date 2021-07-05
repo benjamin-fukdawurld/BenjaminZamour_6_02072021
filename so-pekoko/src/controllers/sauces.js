@@ -23,8 +23,13 @@ class Controller {
   }
 
   addSauce(req, res) {
-    let { image, sauce } = req.body;
-    sauce = new Sauce(sauce);
+    let sauceData = JSON.parse(req.body.sauce);
+    delete sauceData._id;
+    const sauce = new Sauce({
+      ...sauceData,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    });
+
 
     sauce
       .save()
