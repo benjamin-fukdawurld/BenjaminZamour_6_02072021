@@ -55,7 +55,7 @@ class Controller {
             res.status(200).send({
               userId: user.userId,
               token: jwt.sign(
-                { userId: user.userId },
+                { userId: user.userId, priviledge: user.priviledge },
                 process.env.TOKEN_KEY,
                 { expiresIn: process.env.TOKEN_DURATION }
               )
