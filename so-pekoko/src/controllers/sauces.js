@@ -115,11 +115,95 @@ class Controller {
         });
     }).catch(error => {
       res.status(400).send(error);
-    })
+    });
   }
 
   likeSauce(req, res) {
-    res.status(500).send({});
+    if(!req.params.id) {
+      res.status(400).send({message: 'Missing information'});
+      return;
+    }
+
+    if(req.body.like < -1 || req.body.like > 1) {
+      res.status(400).send({ message: `Invalid 'like' value, received ${req.body.like}` });
+    }
+
+    Sauce.findOne({_id: req.params.id}).then(result => {
+      if(!result) {
+        res.status(404).send({ message: 'Cannot find sauce'});
+        return;
+      }
+
+      let likeIndex = result.usersLiked.findIndex(userId =>
+        userId.toString() === req.user.userId
+      );
+
+      let dislikeIndex = result.usersDisliked.findIndex(userId =>
+        userId.toString() === req.user.userId
+      );
+
+      const updateLikes = (addData, removeData) => {
+        const { addIndex, addArray } = addData;
+        const { removeIndex, removeArray } = removeData;
+
+        if(addIndex >= 0) {
+          res.status(400).send({message: 'Cannot like/dislike a sauce twice'});
+          return;
+        }
+
+        if(removeIndex >= 0) {
+          removeArray.splice(removeIndex, 1);
+          removeData.countUpdater();
+        }
+
+        addArray.push(req.user.userId);
+        addData.countUpdater();
+      }
+
+      if(req.body.like === 1) {
+        updateLikes(
+          {
+            addIndex: likeIndex,
+            addArray: result.usersLiked,
+            countUpdater: () => ++result.likes
+          },
+          {
+            removeIndex: dislikeIndex,
+            removeArray: result.usersDisliked,
+            countUpdater: () => --result.dislikes
+          });
+      } else if(req.body.like === -1) {
+        updateLikes(
+          {
+            addIndex: dislikeIndex,
+            addArray: result.usersDisliked,
+            countUpdater: () => ++result.dislikes
+          },
+          {
+            removeIndex: likeIndex,
+            removeArray: result.usersLiked,
+            countUpdater: () => --result.likes
+          });
+      } else {
+        if(likeIndex >= 0) {
+          result.usersLiked.splice(likeIndex, 1);
+          --result.likes;
+        }
+
+        if(dislikeIndex >= 0) {
+          result.usersDisliked.splice(dislikeIndex, 1);
+          --result.dislikes;
+        }
+      }
+
+      delete result._id;
+
+      Sauce.updateOne({ _id: req.params.id }, result)
+        .then(() => res.status(200).send({ message: "Like status updated" }))
+        .catch((error) => res.status(500).send(error))
+    }).catch(error => {
+      res.status(400).send(error);
+    })
   }
 }
 
