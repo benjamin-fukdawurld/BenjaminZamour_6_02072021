@@ -1,8 +1,8 @@
 import express from 'express';
 import controller from '../controllers/sauces.js';
 
-import auth from '../middleware/auth.js'
-import multer from '../middleware/multer-config.js'
+import auth from '../middlewares/auth.js'
+import multer from '../middlewares/multer-config.js'
 
 const router = express.Router();
 
