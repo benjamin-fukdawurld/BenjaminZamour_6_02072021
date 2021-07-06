@@ -6,16 +6,16 @@ import multer from '../middleware/multer-config.js'
 
 const router = express.Router();
 
-router.get('/', auth, controller.getSauces);
+router.get('/', auth, controller.getSauces.bind(controller));
 
-router.get('/:id', auth, controller.getSauce);
+router.get('/:id', auth, controller.getSauce.bind(controller));
 
-router.post('/', auth, multer, controller.addSauce);
+router.post('/', auth, multer, controller.addSauce.bind(controller));
 
-router.put('/:id', auth, controller.updateSauce);
+router.put('/:id', auth, multer, controller.updateSauce.bind(controller));
 
-router.delete('/:id', auth, controller.deleteSauce);
+router.delete('/:id', auth, controller.deleteSauce.bind(controller));
 
-router.post('/:id/like', auth, controller.likeSauce);
+router.post('/:id/like', auth, controller.likeSauce.bind(controller));
 
 export default router;
