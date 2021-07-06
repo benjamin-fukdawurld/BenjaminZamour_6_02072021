@@ -16,13 +16,13 @@ const SauceSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  userLiked: [
+  usersLiked: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
   ],
-  userDisliked: [
+  usersDisliked: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
