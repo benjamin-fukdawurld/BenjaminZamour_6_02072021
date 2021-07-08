@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 import http from 'http';
 import app from './app.js';
 
@@ -20,7 +21,7 @@ function normalizePort(val) {
 }
 
 const port = normalizePort(process.env.SERVER_PORT);
-const server = http.createServer(app);
+const server = http.createServer(app(process.env.FRONT_END_URL));
 
 server.on('error', (error) => {
   if (error.syscall !== 'listen') {
