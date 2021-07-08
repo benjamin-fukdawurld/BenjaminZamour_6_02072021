@@ -1,11 +1,13 @@
 import express from 'express';
 import controller from '../controllers/auth.js';
+import auth from '../middlewares/auth.js'
+import passwordCheck from '../middlewares/password-check.js';
 
 const router = express.Router();
 
-router.get('/users', controller.getUsers.bind(controller));
+router.get('/users', auth(1), controller.getUsers.bind(controller));
 
-router.post('/signup', controller.signup.bind(controller));
+router.post('/signup', passwordCheck, controller.signup.bind(controller));
 
 router.post('/login', controller.login.bind(controller));
 
