@@ -27,7 +27,9 @@ class Controller {
       user
         .save()
         .then((savedUser) => {
-          res.status(201).send({ userId: savedUser._id });
+          res.status(201).send({
+            message: 'User subscribed',
+            userId: savedUser._id });
         })
         .catch((error) => {
           res.status(400).send(error);
@@ -46,9 +48,9 @@ class Controller {
     User.findOne({ email })
       .then((user) => {
         if(!user) {
-          setInterval(
+          setTimeout(
             () => res.status(401).send({ message: 'Connection data invalid' }),
-            1000
+            3000
           )
           return;
         }
@@ -56,6 +58,7 @@ class Controller {
         bcrypt.compare(password, user.password).then(result => {
           if(result){
             res.status(200).send({
+              message: 'User logged',
               userId: user.userId,
               token: jwt.sign(
                 { userId: user.userId, priviledge: user.priviledge },
@@ -64,10 +67,11 @@ class Controller {
               )
             });
           } else {
-            setInterval(
+            setTimeout(
               () => res.status(401).send({ message: 'Connection data invalid' }),
-              1000
+              3000
             );
+            return;
           }
         }).catch(error => {
           res.status(500).send(error);
