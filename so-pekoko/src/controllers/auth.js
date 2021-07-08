@@ -46,7 +46,10 @@ class Controller {
     User.findOne({ email })
       .then((user) => {
         if(!user) {
-          res.status(401).send({ message: 'Connection data invalid' });
+          setInterval(
+            () => res.status(401).send({ message: 'Connection data invalid' }),
+            1000
+          )
           return;
         }
 
@@ -61,7 +64,10 @@ class Controller {
               )
             });
           } else {
-            res.status(401).send({ message: 'Connection data invalid' });
+            setInterval(
+              () => res.status(401).send({ message: 'Connection data invalid' }),
+              1000
+            );
           }
         }).catch(error => {
           res.status(500).send(error);
