@@ -11,6 +11,6 @@ router.post('/signup', passwordCheck, controller.signup.bind(controller));
 
 router.post('/login', controller.login.bind(controller));
 
-router.delete('/delete', controller.deleteUser.bind(controller));
+router.delete('/delete', auth(), controller.deleteUser.bind(controller));
 
 export default router;
