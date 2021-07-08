@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 class Controller {
@@ -21,7 +22,9 @@ class Controller {
       return;
     }
 
-    bcrypt.hash(req.body.password, 10).then(hash => {
+    argon2.hash(req.body.password, {
+      type: argon2.argon2id
+    }).then(hash => {
       const user = new User({ email: req.body.email, password: hash});
 
       user
@@ -55,7 +58,7 @@ class Controller {
           return;
         }
 
-        bcrypt.compare(password, user.password).then(result => {
+        argon2.verify(user.password, password).then(result => {
           if(result){
             res.status(200).send({
               message: 'User logged',
