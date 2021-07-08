@@ -77,6 +77,11 @@ class Controller {
       res.status(400).send({ message: 'Missing information' });
     }
 
+    if(!req.user.priviledge || req.user.userId !== req.body.userId) {
+      res.status(403).send('Unauthorized operation');
+      return;
+    }
+
     User.deleteOne({ _id: req.body.userId })
       .then((result) => {
         if (result.deletedCount === 0) {
