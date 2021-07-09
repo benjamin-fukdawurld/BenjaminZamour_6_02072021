@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import obfuscator from 'obfuscator-email'
 
 class Controller {
   #checkMissingMember;
@@ -111,7 +112,33 @@ class Controller {
   getUsers(req, res) {
     User.find()
       .then((users) => {
-        res.status(200).send({ users });
+        users = users.map(user => {
+          user = user.toObject();
+          delete user._id;
+          delete user.id;
+          return user;
+        });
+
+        switch(req.user.priviledge) {
+          case 1:
+            users = users.map(user => {
+              delete user.priviledge;
+              return user;
+            });
+            // fall through
+
+          case 2:
+            users = users.map(user => {
+              delete user.password;
+              user.email = obfuscator(user.email);
+              return user;
+            });
+            // fall through
+
+          default:
+            res.status(200).send({ users });
+            return;
+        }
       })
       .catch((error) => {
         res.status(400).send(error);
