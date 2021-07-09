@@ -9,7 +9,7 @@ import sauces from './routes/sauces.js';
 function appGenerator(origin) {
     const app = express();
     app.use(cors({ origin }));
-    app.use(express.urlencoded());
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(helmet())
     app.use('/api/auth', auth);
