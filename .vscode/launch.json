@@ -11,8 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/so-pekoko/src/server.js",
-            "cwd": "${workspaceFolder}/so-pekoko"
+            "program": "${workspaceFolder}/so-pekocko/src/server.js",
+            "cwd": "${workspaceFolder}/so-pekocko"
         }
     ]
 }

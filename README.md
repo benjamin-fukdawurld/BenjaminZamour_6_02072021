@@ -6,6 +6,8 @@ Projet n°6 de la formation OCR DW - Construisez une API sécurisée pour une ap
 
 Le sujet du projet est disponible [sur le site d'OpenClassRooms](https://openclassrooms.com/fr/paths/185/projects/676/assignment)
 
+> The Admin account is `admin@so-pekocko.com` pwd: `It_burns_at_1000°` for testing purpose
+
 ## L'OWASP
 
 1. Pour protéger la base de donnée contre les injections suceptible d'arriver sur MongoDB
